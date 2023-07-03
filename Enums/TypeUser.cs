@@ -2,8 +2,8 @@
 {
     public enum TypeUser
     {
-        Student,
-        Teacher,
-        Both
+        Student = 1,
+        Teacher = 2,
+        Both = 3
     }
 }
