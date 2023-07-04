@@ -2,6 +2,7 @@
 using SchoolOfDevs.Controllers;
 using SchoolOfDevs.Entities;
 using SchoolOfDevs.Helpers;
+using BC = BCrypt.Net.BCrypt;
 
 namespace SchoolOfDevs.Services
 {
@@ -24,14 +25,17 @@ namespace SchoolOfDevs.Services
         }
         public async Task<User> Create(User user)
         {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+            if (!user.Password.Equals(user.ConfirmPassword))
+                throw new Exception("Password does not match ConfirmPassword");
+
             User userDb = await _context.Users
                 .AsNoTracking()
                 .SingleOrDefaultAsync(u => u.UserName == user.UserName);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
             if (userDb is not null)
                 throw new Exception($"UserName {user.UserName} already exist");
+
+            user.Password = BC.HashPassword(user.Password);
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
@@ -52,6 +56,7 @@ namespace SchoolOfDevs.Services
             if (userDb is null)
                 throw new Exception($"User {id} not found");
 
+            _context.Users.Remove(userDb);
             await _context.SaveChangesAsync();
         }
 
@@ -72,6 +77,8 @@ namespace SchoolOfDevs.Services
         {
             if (userIn.Id != id)
                 throw new Exception("Route is different from User id");
+            else if (!userIn.Password.Equals(userIn.ConfirmPassword))
+                throw new Exception("Password does not match ConfirmPassword");
 
             User userDb = await _context.Users
                 .AsNoTracking()
@@ -79,6 +86,11 @@ namespace SchoolOfDevs.Services
 
             if (userDb is null)
                 throw new Exception($"UserName {id} not found");
+            else if (!BC.Verify(userIn.CurrentPassword, userDb.Password))
+                throw new Exception("Incorrect password");
+
+            userIn.CreatedAt = userDb.CreatedAt;
+            userIn.Password = BC.HashPassword(userDb.Password);
 
             _context.Entry(userIn).State = EntityState.Modified;
             await _context.SaveChangesAsync();

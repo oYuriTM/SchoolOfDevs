@@ -54,19 +54,21 @@ namespace SchoolOfDevs.Services
             return noteDb;
         }
 
-        public async Task Update(Note noteIn, int id)
+        public async Task Update(Note userIn, int id)
         {
-            if (noteIn.Id != id)
+            if (userIn.Id != id)
                 throw new Exception("Route is different from Note id");
 
-            Note noteDb = await _context.Notes
+            Note userDb = await _context.Notes
                 .AsNoTracking()
                 .SingleOrDefaultAsync(u => u.Id == id);
 
-            if (noteDb is null)
+            if (userDb is null)
                 throw new Exception($"Note {id} not found");
 
-            _context.Entry(noteIn).State = EntityState.Modified;
+            userIn.CreatedAt = userDb.CreatedAt;
+
+            _context.Entry(userIn).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
     }
