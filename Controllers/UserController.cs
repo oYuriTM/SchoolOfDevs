@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SchoolOfDevs.Services;
-using SchoolOfDevs.Entities;
+using SchoolOfDevs.Dto.User;
 
 namespace SchoolOfDevs.Controllers
 {
@@ -16,7 +16,7 @@ namespace SchoolOfDevs.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] User user) =>
+        public async Task<IActionResult> Create([FromBody] UserRequest user) =>
             Ok(await _service.Create(user));
 
         [HttpGet]
@@ -26,7 +26,7 @@ namespace SchoolOfDevs.Controllers
         public async Task<IActionResult> GetById(int id) => Ok(await _service.GetById(id));
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(User userIn, int id)
+        public async Task<IActionResult> Update(UserRequestUpdate userIn, int id)
         {
             await _service.Update(userIn, id);
             return NoContent();
