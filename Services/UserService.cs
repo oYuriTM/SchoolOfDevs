@@ -110,7 +110,7 @@ namespace SchoolOfDevs.Services
                 .SingleOrDefaultAsync(u => u.Id == id);
 
             if (userDb is null)
-                throw new KeyNotFoundException($"UserName {id} not found");
+                throw new KeyNotFoundException($"User {id} not found");
             else if (!BC.Verify(userRequest.CurrentPassword, userDb.Password))
                 throw new BadRequestException("Incorrect password");
 

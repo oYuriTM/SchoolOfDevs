@@ -13,7 +13,7 @@ namespace SchoolOfDevs.Dto.User
         public TypeUser TypeUser { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public List<Course> CoursesTeaching { get; set; } // TypeUser == Teacher
-        public List<Course> CoursesStuding { get; set; } // TypeUser == Student
+        public List<Entities.Course> CoursesStuding { get; set; } 
+        public List<Entities.Course> CoursesTeaching { get; set; } 
     }
 }
