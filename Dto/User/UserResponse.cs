@@ -1,5 +1,4 @@
-﻿using SchoolOfDevs.Entities;
-using SchoolOfDevs.Enums;
+﻿using SchoolOfDevs.Enums;
 
 namespace SchoolOfDevs.Dto.User
 {
